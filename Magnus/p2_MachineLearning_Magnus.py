@@ -9,6 +9,7 @@
 import numpy as np
 import gensim
 from gensim.models import Word2Vec
+from gensim.models import Doc2Vec
 import csv
 #import pandas as pd
 #import spacy
@@ -30,7 +31,6 @@ from scipy.stats import randint as sp_randint
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.datasets import load_digits
 from sklearn.ensemble import RandomForestClassifier
-
 from sklearn import preprocessing 
 
 
@@ -69,6 +69,11 @@ def createWordEmbedding(list_of_tweets, features, epoc):
     model.train(list_of_tweets, total_examples=len(list_of_tweets), epochs=epoc)
     return model
 
+def createSentEmbedding(list_of_tweets, features, epoc):
+    model = Doc2Vec(list_of_tweets, size=features, min_count=1)
+    model.train(list_of_tweets, total_examples=len(list_of_tweets), epochs=epoc)
+    return model
+
 def save_csv(fileName, test_y):
     ids = np.arange(len(test_y))  
     with open(fileName, 'w') as csvfile:
@@ -90,22 +95,22 @@ def train(method, x, y, x_test):
 # In[3]:
 
 
-features = 350
-epoc = 50
-spos = open_file("train_pos.txt")
-sneg = open_file("train_neg.txt")
+features = 60
+epoch = 20
+positive_tweets = open_file("train_pos.txt")
+negative_tweets = open_file("train_neg.txt")
 
-spos = processTrainingData(spos)
-sneg = processTrainingData(sneg)
+positive_tweets = processTrainingData(positive_tweets)
+negative_tweets = processTrainingData(negative_tweets)
 
-y = [1]*len(spos)+[0]*len(sneg)
+y = [1]*len(positive_tweets)+[0]*len(negative_tweets)
 
-stotal = spos+sneg
+all_tweets = positive_tweets+negative_tweets #list of tweets
 
-model_tot = createWordEmbedding(stotal, features, epoc)
+model_tot = createWordEmbedding(all_tweets, features, epoch) #word embedding
 
-X = create_X(stotal,model_tot, features) 
-X = preprocessing.scale(X)
+X = create_X(all_tweets,model_tot, features) 
+print('ferdig med trening-ish')
 
 
 # In[4]:
@@ -114,91 +119,50 @@ X = preprocessing.scale(X)
 testd = open_file("test_data.txt")
 testd = [gensim.utils.simple_preprocess(line) for line in testd]
 
-model_test = createWordEmbedding(testd, features, epoc)
-
-X_test = create_X(testd,model_test, features)
+model_test = createWordEmbedding(testd, features, epoch)
 
 
 # In[5]:
 
 
+X = preprocessing.scale(X)
+X_test = create_X(testd,model_test, features)
+X_test = preprocessing.scale(X_test)
 # Build logistic regression classifiers to identify the polarity of words
 test_y = train(LogisticRegression(), X, y, X_test)
 
 # Build naive bayes classifiers to identify the polarity of words
-test_y_nb = train(nb.GaussianNB(), X, y, X_test) # this one isn't working
+#test_y_nb = train(nb.GaussianNB(), X, y, X_test) # this one isn't working
 
 
 # In[6]:
 
 
+save_csv('test_resultLR.csv', test_y)
+#save_csv('test_resultNB.csv', test_y_nb)
+
+
+# ## Doing some cross validation:
+
+# In[9]:
+
+
+clf = linear_model.SGDClassifier(max_iter=500, tol=1e-3)
+
+cv_results_clf = cross_validate(clf, X, y, return_train_score=False)
+print(cv_results_clf['test_score'])
+
 cv_results_lr = cross_validate(LogisticRegression(), X, y, return_train_score=False)
 print(cv_results_lr['test_score'])
 
-
-# In[7]:
-
-
-clf = linear_model.SGDClassifier(max_iter=1000, tol=1e-3)
-
-cv_results_lr = cross_validate(clf, X, y, return_train_score=False)
-print(cv_results_lr['test_score'])
+#cv_results_nb = cross_validate(nb.GaussianNB(), X, y, return_train_score=False)
+#print(cv_results_nb['test_score'])
 
 
 # In[8]:
 
 
-save_csv('test_resultLR.csv', test_y)
-save_csv('test_resultNB.csv', test_y_nb)
-
-
-# In[9]:
-
-
 print('Done')
-
-
-# In[ ]:
-
-
-
-'''
-#function from scikit:
-x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
-tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
-                     'C': [1, 10, 100, 1000]},
-                    {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
-scores = ['precision', 'recall']
-for score in scores:
-    print("# Tuning hyper-parameters for %s" % score)
-    print()
-
-    clf = GridSearchCV(SVC(), tuned_parameters, cv=5,
-                       scoring='%s_macro' % score)
-    clf.fit(x_train, y_train)
-
-    print("Best parameters set found on development set:")
-    print()
-    print(clf.best_params_)
-    print()
-    print("Grid scores on development set:")
-    print()
-    means = clf.cv_results_['mean_test_score']
-    stds = clf.cv_results_['std_test_score']
-    for mean, std, params in zip(means, stds, clf.cv_results_['params']):
-        print("%0.3f (+/-%0.03f) for %r"
-              % (mean, std * 2, params))
-    print()
-
-    print("Detailed classification report:")
-    print()
-    print("The model is trained on the full development set.")
-    print("The scores are computed on the full evaluation set.")
-    print()
-    y_true, y_pred = y_test, clf.predict(x_test)
-    print(classification_report(y_true, y_pred))
-    print()
-'''
 
 
 # In[ ]:
