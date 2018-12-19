@@ -26,7 +26,10 @@ To install a package simple input
 ## Files included
 
 1. readme.md
-2. python.py
+2. run.py
+3. cnn.py
+4. helpersProject2.py
+5. methodsProject2.py
 
 ## Instructions to run
 
