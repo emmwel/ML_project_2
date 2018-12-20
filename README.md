@@ -10,12 +10,11 @@ For this project we use:
 	Python 3.6.5
         numpy 1.14.3
         csv 1.0
-	gensim
-	sklearn
-	scipy
+	gensim 3.4.0
+	sklearn 0.20.1
 	keras 2.2.4
 	random  
-	tensorflow
+	tensorflow 1.12.0
 ```
 
 To install a package simple input
