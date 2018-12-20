@@ -1,4 +1,4 @@
-# Project 2, ML Text Classification
+# Sentiment analysis of tweets.
 In this project, the goal is to determine the sentiment of tweets. Specifically we will try to predict whether a tweet contained a negative or a positive emoji. The submission used on crowdai was made with a convolutional neural network.
 
 ## CrowdAI submission.
