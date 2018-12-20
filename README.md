@@ -43,5 +43,4 @@ The training data and test data should be the files:
 3. test_data.txt
 
 ## Instructions to replicate test score
-All the parameters are set in
 1. execute "python3 run.py" in a terminal
