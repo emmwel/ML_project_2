@@ -6,6 +6,7 @@ Username: anonym Grevling
 
 Submission ID: 24231 
 
+Submission score: 0.844
 ## Prerequisites
 
 For this project we use:
