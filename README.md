@@ -1,6 +1,9 @@
 # Project 2, ML Text Classification
-In this project, the goal is to determine the sentiment of tweets. Specifically we will try to predict whether a tweet contained a negative or a positive emoji. We have tried several different methods, notably word2vec with logistic regression, word2vec with cnn and tfidf vectorizer with logistic regression.
+In this project, the goal is to determine the sentiment of tweets. Specifically we will try to predict whether a tweet contained a negative or a positive emoji. The submission used on crowdai was made with a convolutional neural network.
 
+## CrowdAI submission.
+username: anonym Grevling
+submission ID: 24231 
 
 ## Prerequisites
 
@@ -27,8 +30,16 @@ To install a package simple input
 1. readme.md
 2. run.py
 3. cnn.py
-4. helpersProject2.py
-5. methodsProject2.py
+4. implementations.py
 
-## Instructions to run
+## Instructions to set up
+All the text files should be place in the directory "data". 
+The training data and test data should be the files: 
 
+1. train_pos_full.txt
+2. train_neg_full.txt
+3. test_data.txt
+
+## Instructions to replicate test score
+All the parameters are set in
+1. execute "python3 run.py" in a terminal
