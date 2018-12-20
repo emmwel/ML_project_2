@@ -112,4 +112,4 @@ def CNN(w2vName, negFile, posFile, batch_size, testData, epochs, word_count, fea
     y_cnn_rounded = (np.around(y_cnn)).flatten() 
     y_cnn_rounded[y_cnn_rounded == 0] = -1 # turns all zeros into -1
     save_csv('test_resultCNN.csv', y_cnn_rounded)
-    return ycnn_rounded
+    #return ycnn_rounded
