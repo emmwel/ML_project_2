@@ -11,18 +11,16 @@ Submission score: 0.844
 
 For this project we use:
 
-```
-	Python 3.6.5
-        numpy 1.14.3
-        csv 1.0
-	gensim 3.4.0
-	sklearn 0.20.1
-	keras 2.2.4
-	random  
-	tensorflow 1.12.0
-```
+* Python 3.6.5
+* numpy 1.14.3
+* csv 1.0
+* gensim 3.4.0
+* sklearn 0.20.1
+* keras 2.2.4
+* random  
+* tensorflow 1.12.0
 
-To install a package simple input
+To install a package simply input
 ~~~~
 	pip install "name of package"
 ~~~~
